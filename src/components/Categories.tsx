@@ -7,25 +7,25 @@ const categories = [
     title: "Healthy Snacks",
     description: "Guilt-free snacking with clean ingredients",
     icon: Apple,
-    color: "bg-gradient-to-br from-sage-lighter to-cream"
+    color: "bg-gradient-to-br from-emerald-lighter to-gold-lighter"
   },
   {
     title: "Pantry Staples", 
     description: "Essential ingredients for mindful cooking",
     icon: Package,
-    color: "bg-gradient-to-br from-cream to-sage-lighter"
+    color: "bg-gradient-to-br from-gold-lighter to-champagne"
   },
   {
     title: "Supplements",
     description: "Pure nutrition to support your wellness",
     icon: Pill,
-    color: "bg-gradient-to-br from-sage-lighter to-accent"
+    color: "bg-gradient-to-br from-emerald-lighter to-accent"
   },
   {
     title: "Kid Friendly",
     description: "Wholesome products your children will love",
     icon: Baby,
-    color: "bg-gradient-to-br from-accent to-cream"
+    color: "bg-gradient-to-br from-gold-lighter to-emerald-lighter"
   }
 ];
 
@@ -47,11 +47,11 @@ const Categories = () => {
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <Card key={index} className="group hover:shadow-natural transition-all duration-300 hover:-translate-y-2 border-0 overflow-hidden">
+              <Card key={index} className="group hover:shadow-luxury transition-all duration-300 hover:-translate-y-2 border-0 overflow-hidden">
                 <CardContent className="p-0">
                   <div className={`${category.color} p-8 text-center`}>
                     <div className="w-16 h-16 mx-auto mb-6 bg-background/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <IconComponent className="w-8 h-8 text-sage" />
+                      <IconComponent className="w-8 h-8 text-emerald" />
                     </div>
                     <h3 className="text-xl font-semibold text-foreground mb-3">
                       {category.title}
@@ -59,7 +59,7 @@ const Categories = () => {
                     <p className="text-muted-foreground mb-6 leading-relaxed">
                       {category.description}
                     </p>
-                    <Button variant="outline" className="border-sage text-sage hover:bg-sage hover:text-primary-foreground rounded-full">
+                    <Button variant="outline" className="border-emerald text-emerald hover:bg-emerald hover:text-primary-foreground rounded-full">
                       Explore {category.title}
                     </Button>
                   </div>

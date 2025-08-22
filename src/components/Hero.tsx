@@ -25,10 +25,10 @@ const Hero = () => {
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-          <Button size="lg" className="text-lg px-8 py-6 bg-sage hover:bg-sage-light text-primary-foreground rounded-full shadow-natural">
+          <Button size="lg" className="text-lg px-8 py-6 bg-emerald hover:bg-emerald-light text-primary-foreground rounded-full shadow-luxury">
             Shop Clean Products
           </Button>
-          <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-sage text-sage hover:bg-sage-lighter rounded-full">
+          <Button variant="outline" size="lg" className="text-lg px-8 py-6 border-gold text-gold hover:bg-gold-lighter rounded-full shadow-gold">
             Learn Our Story
           </Button>
         </div>
@@ -36,15 +36,15 @@ const Hero = () => {
         {/* Trust indicators */}
         <div className="mt-12 flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-sage rounded-full"></div>
+            <div className="w-2 h-2 bg-gold rounded-full"></div>
             <span>No Artificial Additives</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-sage rounded-full"></div>
+            <div className="w-2 h-2 bg-gold rounded-full"></div>
             <span>Carefully Curated</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 bg-sage rounded-full"></div>
+            <div className="w-2 h-2 bg-gold rounded-full"></div>
             <span>Premium Quality</span>
           </div>
         </div>

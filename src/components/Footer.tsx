@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   return (
-    <footer className="bg-sage text-primary-foreground">
+    <footer className="bg-emerald text-primary-foreground">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -13,16 +13,16 @@ const Footer = () => {
               Clean, curated, and mindful shopping for the conscious consumer.
             </p>
             <div className="flex space-x-4">
-              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-sage-light">
+              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-gold hover:bg-emerald-light">
                 <Facebook className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-sage-light">
+              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-gold hover:bg-emerald-light">
                 <Instagram className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-sage-light">
+              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-gold hover:bg-emerald-light">
                 <Twitter className="w-5 h-5" />
               </Button>
-              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-primary-foreground hover:bg-sage-light">
+              <Button variant="ghost" size="icon" className="text-primary-foreground/80 hover:text-gold hover:bg-emerald-light">
                 <Mail className="w-5 h-5" />
               </Button>
             </div>
@@ -62,7 +62,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-sage-light mt-12 pt-8 text-center text-primary-foreground/80">
+        <div className="border-t border-emerald-light mt-12 pt-8 text-center text-primary-foreground/80">
           <p>&copy; 2024 The Naked Pantry. All rights reserved.</p>
         </div>
       </div>

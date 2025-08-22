@@ -37,8 +37,8 @@ const ValueProposition = () => {
             const IconComponent = value.icon;
             return (
               <div key={index} className="text-center group">
-                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-sage-lighter to-cream rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-soft">
-                  <IconComponent className="w-10 h-10 text-sage" />
+                <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-emerald-lighter to-gold-lighter rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-luxury">
+                  <IconComponent className="w-10 h-10 text-emerald" />
                 </div>
                 <h3 className="text-2xl font-semibold text-foreground mb-4">
                   {value.title}
