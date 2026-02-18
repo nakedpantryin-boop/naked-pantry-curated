@@ -1,22 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { SlidersHorizontal, X } from "lucide-react";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
-const categories = [
-  "All",
-  "Healthy Snacks",
-  "Pantry Staples",
-  "Superfoods",
-  "Beverages",
-  "Supplements",
-  "Kid Friendly",
-  "Breakfast",
-  "Baking",
+const NAV_CATEGORIES = [
+  { label: "All", slug: null },
+  { label: "Healthy Snacks", slug: "healthy-snacks" },
+  { label: "Pantry Staples", slug: "pantry-staples" },
+  { label: "Superfoods", slug: null },
+  { label: "Beverages", slug: null },
+  { label: "Supplements", slug: "supplements" },
+  { label: "Kid Friendly", slug: "kid-friendly" },
+  { label: "Breakfast", slug: null },
+  { label: "Baking", slug: null },
 ];
 
-const filters = [
+const FILTER_OPTIONS = [
   "Low Sugar",
   "High Fiber",
   "Gut Friendly",
@@ -30,16 +31,25 @@ const filters = [
 interface CategoryNavBarProps {
   onCategoryChange?: (category: string) => void;
   onFiltersChange?: (filters: string[]) => void;
+  activeCategory?: string;
 }
 
-const CategoryNavBar = ({ onCategoryChange, onFiltersChange }: CategoryNavBarProps) => {
-  const [activeCategory, setActiveCategory] = useState("All");
+const CategoryNavBar = ({
+  onCategoryChange,
+  onFiltersChange,
+  activeCategory,
+}: CategoryNavBarProps) => {
+  const navigate = useNavigate();
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
 
-  const handleCategoryClick = (category: string) => {
-    setActiveCategory(category);
-    onCategoryChange?.(category);
+  const handleCategoryClick = (slug: string | null, label: string) => {
+    if (slug) {
+      navigate(`/category/${slug}`);
+    } else {
+      navigate("/");
+    }
+    onCategoryChange?.(label);
   };
 
   const toggleFilter = (filter: string) => {
@@ -74,21 +84,24 @@ const CategoryNavBar = ({ onCategoryChange, onFiltersChange }: CategoryNavBarPro
 
           <ScrollArea className="flex-1">
             <div className="flex items-center gap-2 pb-1">
-              {categories.map((category) => (
-                <Button
-                  key={category}
-                  variant={activeCategory === category ? "default" : "ghost"}
-                  size="sm"
-                  className={`rounded-full flex-shrink-0 whitespace-nowrap transition-all ${
-                    activeCategory === category
-                      ? "bg-emerald text-primary-foreground hover:bg-emerald-light"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  onClick={() => handleCategoryClick(category)}
-                >
-                  {category}
-                </Button>
-              ))}
+              {NAV_CATEGORIES.map(({ label, slug }) => {
+                const isActive = activeCategory === label || (!activeCategory && label === "All");
+                return (
+                  <Button
+                    key={label}
+                    variant={isActive ? "default" : "ghost"}
+                    size="sm"
+                    className={`rounded-full flex-shrink-0 whitespace-nowrap transition-all ${
+                      isActive
+                        ? "bg-emerald text-primary-foreground hover:bg-emerald-light"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                    onClick={() => handleCategoryClick(slug, label)}
+                  >
+                    {label}
+                  </Button>
+                );
+              })}
             </div>
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
@@ -97,7 +110,7 @@ const CategoryNavBar = ({ onCategoryChange, onFiltersChange }: CategoryNavBarPro
         {/* Expandable filter chips */}
         {showFilters && (
           <div className="pb-4 flex flex-wrap gap-2 animate-in slide-in-from-top-2 duration-200">
-            {filters.map((filter) => {
+            {FILTER_OPTIONS.map((filter) => {
               const isActive = activeFilters.includes(filter);
               return (
                 <Button
