@@ -1,20 +1,25 @@
 import { Leaf, Heart, Sparkles } from "lucide-react";
 
 interface NakedPantryTakeProps {
-  /** Nutritionist's summary of the product */
+  /** Nutritionist's summary pulled from the `naked_pantry.nutritionist_summary` metafield */
   summary?: string;
-  /** Key highlights from the nutritionist */
+  /** Key highlights pulled from the `naked_pantry.nutritionist_highlights` metafield (JSON array or newline-separated) */
   highlights?: string[];
 }
 
+const defaultSummary =
+  "Our in-house nutritionist has evaluated this product for ingredient quality, nutritional balance, and clean-label standards. Here's what stands out.";
+
+const defaultHighlights = [
+  "No artificial preservatives or flavors",
+  "Rich in plant-based protein and fiber",
+  "Low glycemic index — suitable for mindful snacking",
+  "Minimally processed with transparent sourcing",
+];
+
 const NakedPantryTake = ({
-  summary = "Our in-house nutritionist has evaluated this product for ingredient quality, nutritional balance, and clean-label standards. Here's what stands out.",
-  highlights = [
-    "No artificial preservatives or flavors",
-    "Rich in plant-based protein and fiber",
-    "Low glycemic index — suitable for mindful snacking",
-    "Minimally processed with transparent sourcing",
-  ],
+  summary = defaultSummary,
+  highlights = defaultHighlights,
 }: NakedPantryTakeProps) => {
   return (
     <section className="rounded-2xl border-2 border-emerald/20 bg-emerald-lighter/50 p-8">
@@ -50,6 +55,15 @@ const NakedPantryTake = ({
           </li>
         ))}
       </ul>
+
+      {/* Metafield setup hint — only visible in dev */}
+      {summary === defaultSummary && import.meta.env.DEV && (
+        <p className="mt-6 text-xs text-muted-foreground/60 italic">
+          Tip: Add <code>naked_pantry.nutritionist_summary</code> (text) and{" "}
+          <code>naked_pantry.nutritionist_highlights</code> (JSON array) metafields
+          in Shopify admin to customise this section per product.
+        </p>
+      )}
     </section>
   );
 };
