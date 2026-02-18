@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Apple, Package, Pill, Baby } from "lucide-react";
@@ -7,29 +8,35 @@ const categories = [
     title: "Healthy Snacks",
     description: "Guilt-free snacking with clean ingredients",
     icon: Apple,
-    color: "bg-gradient-to-br from-emerald-lighter to-gold-lighter"
+    color: "bg-gradient-to-br from-emerald-lighter to-gold-lighter",
+    slug: "healthy-snacks",
   },
   {
-    title: "Pantry Staples", 
+    title: "Pantry Staples",
     description: "Essential ingredients for mindful cooking",
     icon: Package,
-    color: "bg-gradient-to-br from-gold-lighter to-champagne"
+    color: "bg-gradient-to-br from-gold-lighter to-champagne",
+    slug: "pantry-staples",
   },
   {
     title: "Supplements",
     description: "Pure nutrition to support your wellness",
     icon: Pill,
-    color: "bg-gradient-to-br from-emerald-lighter to-accent"
+    color: "bg-gradient-to-br from-emerald-lighter to-accent",
+    slug: "supplements",
   },
   {
     title: "Kid Friendly",
     description: "Wholesome products your children will love",
     icon: Baby,
-    color: "bg-gradient-to-br from-gold-lighter to-emerald-lighter"
-  }
+    color: "bg-gradient-to-br from-gold-lighter to-emerald-lighter",
+    slug: "kid-friendly",
+  },
 ];
 
 const Categories = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="py-20 bg-gradient-to-b from-background to-muted">
       <div className="container mx-auto px-4">
@@ -47,7 +54,11 @@ const Categories = () => {
           {categories.map((category, index) => {
             const IconComponent = category.icon;
             return (
-              <Card key={index} className="group hover:shadow-luxury transition-all duration-300 hover:-translate-y-2 border-0 overflow-hidden">
+              <Card
+                key={index}
+                className="group hover:shadow-luxury transition-all duration-300 hover:-translate-y-2 border-0 overflow-hidden cursor-pointer"
+                onClick={() => navigate(`/category/${category.slug}`)}
+              >
                 <CardContent className="p-0">
                   <div className={`${category.color} p-8 text-center`}>
                     <div className="w-16 h-16 mx-auto mb-6 bg-background/20 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -59,7 +70,14 @@ const Categories = () => {
                     <p className="text-muted-foreground mb-6 leading-relaxed">
                       {category.description}
                     </p>
-                    <Button variant="outline" className="border-emerald text-emerald hover:bg-emerald hover:text-primary-foreground rounded-full">
+                    <Button
+                      variant="outline"
+                      className="border-emerald text-emerald hover:bg-emerald hover:text-primary-foreground rounded-full"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/category/${category.slug}`);
+                      }}
+                    >
                       Explore {category.title}
                     </Button>
                   </div>
