@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
@@ -18,8 +18,10 @@ import {
 import { useCartStore } from "@/stores/cartStore";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState, useMemo } from "react";
+import { storefrontApiRequest, PRODUCTS_QUERY, type ShopifyProduct } from "@/lib/shopify";
+import { CATEGORY_CONFIG } from "@/lib/categoryConfig";
+import ProductCard from "@/components/ProductCard";
 
 const TRUST_BADGES = [
   { icon: ShieldCheck, label: "Secure Checkout", sub: "SSL encrypted" },
@@ -47,9 +49,48 @@ const CartPage = () => {
   );
   const currencyCode = items[0]?.price.currencyCode ?? "INR";
 
+  // Derive the category tag from the first cart item's tags
+  const categoryTag = useMemo(() => {
+    const firstItemTags = items[0]?.product.node.tags ?? [];
+    const match = Object.values(CATEGORY_CONFIG).find((cat) =>
+      firstItemTags.some(
+        (t) => t.toLowerCase() === cat.tagQuery.toLowerCase()
+      )
+    );
+    return match ?? null;
+  }, [items]);
+
+  const [recommended, setRecommended] = useState<ShopifyProduct[]>([]);
+  const [loadingRec, setLoadingRec] = useState(false);
+
   useEffect(() => {
     syncCart();
   }, [syncCart]);
+
+  // Fetch recommended products whenever the derived category changes
+  useEffect(() => {
+    if (!categoryTag) {
+      setRecommended([]);
+      return;
+    }
+    const cartVariantIds = new Set(items.map((i) => i.variantId));
+    setLoadingRec(true);
+    storefrontApiRequest(PRODUCTS_QUERY, {
+      first: 8, // fetch extra so we can exclude cart items and still show 4
+      query: `tag:${categoryTag.tagQuery}`,
+    })
+      .then((data) => {
+        const all: ShopifyProduct[] = data?.data?.products?.edges ?? [];
+        // Exclude products whose first variant is already in the cart
+        const filtered = all.filter(
+          (p) =>
+            !cartVariantIds.has(p.node.variants.edges[0]?.node.id ?? "")
+        );
+        setRecommended(filtered.slice(0, 4));
+      })
+      .catch(() => setRecommended([]))
+      .finally(() => setLoadingRec(false));
+  }, [categoryTag, items]);
 
   const handleCheckout = () => {
     const checkoutUrl = getCheckoutUrl();
@@ -311,6 +352,60 @@ const CartPage = () => {
             </div>
           )}
         </div>
+
+        {/* ─── You might also like ─── */}
+        {(loadingRec || recommended.length > 0) && (
+          <div className="border-t border-border bg-muted/30 py-14">
+            <div className="container mx-auto px-4">
+              <div className="flex items-end justify-between mb-8">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-emerald mb-1">
+                    {categoryTag?.title ?? "More picks"}
+                  </p>
+                  <h2 className="text-2xl font-bold text-foreground">
+                    You might also like
+                  </h2>
+                </div>
+                {categoryTag && (
+                  <Link
+                    to={`/category/${categoryTag.slug}`}
+                    className="text-sm font-medium text-emerald hover:text-emerald-light transition-colors hidden sm:block"
+                  >
+                    View all →
+                  </Link>
+                )}
+              </div>
+
+              {loadingRec ? (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                  {Array.from({ length: 4 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="aspect-square rounded-2xl bg-muted animate-pulse"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+                  {recommended.map((product) => (
+                    <ProductCard key={product.node.id} product={product} />
+                  ))}
+                </div>
+              )}
+
+              {categoryTag && (
+                <div className="mt-6 text-center sm:hidden">
+                  <Link
+                    to={`/category/${categoryTag.slug}`}
+                    className="text-sm font-medium text-emerald hover:text-emerald-light transition-colors"
+                  >
+                    View all in {categoryTag.title} →
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </main>
 
       <Footer />
