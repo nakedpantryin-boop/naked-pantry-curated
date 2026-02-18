@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -27,6 +27,12 @@ const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryPr
   const [sortBy, setSortBy] = useState<SortOption>("featured");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const [debouncedQuery, setDebouncedQuery] = useState(searchQuery);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(searchQuery), 300);
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
 
   const toggleFilter = (tag: string) => {
     setActiveFilters((prev) =>
@@ -36,13 +42,13 @@ const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryPr
 
   const clearFilters = () => setActiveFilters([]);
 
-  // Client-side filter: search query + diet filters
+  // Client-side filter: debounced search query + diet filters
   const filtered = useMemo(() => {
     let result = products;
 
-    // Search by title or description
-    if (searchQuery.trim()) {
-      const q = searchQuery.toLowerCase().trim();
+    // Search by title or description (uses debounced value for perf)
+    if (debouncedQuery.trim()) {
+      const q = debouncedQuery.toLowerCase().trim();
       result = result.filter(
         (p) =>
           p.node.title.toLowerCase().includes(q) ||
@@ -56,7 +62,7 @@ const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryPr
     }
 
     return result;
-  }, [products, activeFilters, searchQuery]);
+  }, [products, activeFilters, debouncedQuery]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -215,8 +221,8 @@ const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryPr
               <ShoppingCart className="w-16 h-16 text-muted-foreground mb-6" />
               <h3 className="text-xl font-semibold text-foreground mb-2">No products found</h3>
               <p className="text-muted-foreground max-w-sm">
-                {searchQuery
-                  ? `No products match "${searchQuery}". Try a different keyword or `
+                {debouncedQuery
+                  ? `No products match "${debouncedQuery}". Try a different keyword or `
                   : "We haven't added any products to this category yet — check back soon, or "}
                 <button
                   className="text-primary underline"
