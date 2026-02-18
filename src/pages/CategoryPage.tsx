@@ -15,6 +15,7 @@ const CategoryPage = () => {
 
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // Redirect to 404 if unknown category
   useEffect(() => {
@@ -27,10 +28,10 @@ const CategoryPage = () => {
     if (!config) return;
     setLoading(true);
     setProducts([]);
+    setSearchQuery("");
 
     const fetchProducts = async () => {
       try {
-        // Fetch products tagged with this category
         const data = await storefrontApiRequest(PRODUCTS_QUERY, {
           first: 48,
           query: `tag:${config.tagQuery}`,
@@ -58,8 +59,14 @@ const CategoryPage = () => {
         <CategoryHero
           config={config}
           productCount={loading ? null : products.length}
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
         />
-        <CategoryProductGrid products={products} loading={loading} />
+        <CategoryProductGrid
+          products={products}
+          loading={loading}
+          searchQuery={searchQuery}
+        />
       </main>
       <Footer />
     </div>

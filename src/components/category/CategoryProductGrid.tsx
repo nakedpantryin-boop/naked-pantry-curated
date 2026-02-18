@@ -19,9 +19,10 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 interface CategoryProductGridProps {
   products: ShopifyProduct[];
   loading: boolean;
+  searchQuery?: string;
 }
 
-const CategoryProductGrid = ({ products, loading }: CategoryProductGridProps) => {
+const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryProductGridProps) => {
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>("featured");
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -35,15 +36,27 @@ const CategoryProductGrid = ({ products, loading }: CategoryProductGridProps) =>
 
   const clearFilters = () => setActiveFilters([]);
 
-  // Client-side filter by product tags
+  // Client-side filter: search query + diet filters
   const filtered = useMemo(() => {
-    if (activeFilters.length === 0) return products;
-    return products.filter((p) => {
-      // Tags are not in the standard query; we'll match on title/description as fallback
-      // If tags are added to the query, this will work automatically
-      return true; // placeholder – real tag filtering requires tags in GQL query
-    });
-  }, [products, activeFilters]);
+    let result = products;
+
+    // Search by title or description
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (p) =>
+          p.node.title.toLowerCase().includes(q) ||
+          (p.node.description ?? "").toLowerCase().includes(q)
+      );
+    }
+
+    // Diet tag filters (placeholder — requires tags in GQL query)
+    if (activeFilters.length > 0) {
+      result = result.filter(() => true);
+    }
+
+    return result;
+  }, [products, activeFilters, searchQuery]);
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -202,7 +215,9 @@ const CategoryProductGrid = ({ products, loading }: CategoryProductGridProps) =>
               <ShoppingCart className="w-16 h-16 text-muted-foreground mb-6" />
               <h3 className="text-xl font-semibold text-foreground mb-2">No products found</h3>
               <p className="text-muted-foreground max-w-sm">
-                We haven't added any products to this category yet — check back soon, or{" "}
+                {searchQuery
+                  ? `No products match "${searchQuery}". Try a different keyword or `
+                  : "We haven't added any products to this category yet — check back soon, or "}
                 <button
                   className="text-primary underline"
                   onClick={clearFilters}
