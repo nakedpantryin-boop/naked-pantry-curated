@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { ShoppingCart, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import type { ShopifyProduct } from "@/lib/shopify";
+import { DIET_FILTERS } from "@/lib/categoryConfig";
 import { toast } from "sonner";
 
 interface ProductCardProps {
@@ -15,10 +17,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const addItem = useCartStore((state) => state.addItem);
   const isLoading = useCartStore((state) => state.isLoading);
 
-  const { title, handle, priceRange, images, variants } = product.node;
+  const { title, handle, priceRange, images, variants, tags } = product.node;
   const image = images.edges[0]?.node;
   const firstVariant = variants.edges[0]?.node;
   const price = priceRange.minVariantPrice;
+
+  // Only show tags that match known diet filters (max 3 to keep card tidy)
+  const knownDietTags = DIET_FILTERS.filter((f) =>
+    (tags ?? []).some((t) => t.toLowerCase() === f.tag.toLowerCase())
+  ).slice(0, 3);
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -60,9 +67,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <h3 className="font-semibold text-foreground text-lg mb-1 truncate group-hover:text-primary transition-colors">
             {title}
           </h3>
-          <p className="text-emerald font-bold text-lg mb-4">
+          <p className="text-emerald font-bold text-lg mb-3">
             {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
           </p>
+          {knownDietTags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-4">
+              {knownDietTags.map((f) => (
+                <Badge
+                  key={f.tag}
+                  variant="secondary"
+                  className="text-xs rounded-full px-2 py-0.5 bg-emerald/10 text-emerald border border-emerald/20 font-medium"
+                >
+                  {f.label}
+                </Badge>
+              ))}
+            </div>
+          )}
           <Button
             onClick={handleAddToCart}
             disabled={isLoading || !firstVariant?.availableForSale}
