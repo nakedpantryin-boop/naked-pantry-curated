@@ -6,6 +6,12 @@ const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${
 const SHOPIFY_STOREFRONT_TOKEN = '809412d78aeb2b38d60b75e785eab965';
 
 // Types
+export interface ProductMetafield {
+  key: string;
+  value: string;
+  namespace: string;
+}
+
 export interface ShopifyProduct {
   node: {
     id: string;
@@ -47,6 +53,11 @@ export interface ShopifyProduct {
       name: string;
       values: string[];
     }>;
+    // Metafields for NakedPantryTake section
+    nutritionistSummary?: ProductMetafield | null;
+    nutritionistHighlights?: ProductMetafield | null;
+    // Metafields for Certifications section
+    certifications?: ProductMetafield | null;
   };
 }
 
@@ -171,6 +182,21 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       options {
         name
         values
+      }
+      nutritionistSummary: metafield(namespace: "naked_pantry", key: "nutritionist_summary") {
+        key
+        value
+        namespace
+      }
+      nutritionistHighlights: metafield(namespace: "naked_pantry", key: "nutritionist_highlights") {
+        key
+        value
+        namespace
+      }
+      certifications: metafield(namespace: "naked_pantry", key: "certifications") {
+        key
+        value
+        namespace
       }
     }
   }

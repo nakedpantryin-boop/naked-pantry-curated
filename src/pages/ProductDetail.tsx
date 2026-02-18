@@ -132,14 +132,32 @@ const ProductDetail = () => {
 
         {/* Naked Pantry's Take */}
         <div className="max-w-3xl mx-auto mb-16">
-          <NakedPantryTake />
+          <NakedPantryTake
+            summary={product.nutritionistSummary?.value || undefined}
+            highlights={
+              product.nutritionistHighlights?.value
+                ? (() => {
+                    try {
+                      return JSON.parse(product.nutritionistHighlights.value);
+                    } catch {
+                      // Single-line fallback if not JSON
+                      return product.nutritionistHighlights.value
+                        .split("\n")
+                        .filter(Boolean);
+                    }
+                  })()
+                : undefined
+            }
+          />
         </div>
 
         <Separator className="mb-16" />
 
         {/* Certifications & Lab Tests */}
         <div className="mb-16">
-          <ProductCertifications />
+          <ProductCertifications
+            metafieldJson={product.certifications?.value || undefined}
+          />
         </div>
 
         <Separator className="mb-16" />
