@@ -56,9 +56,12 @@ const CategoryProductGrid = ({ products, loading, searchQuery = "" }: CategoryPr
       );
     }
 
-    // Diet tag filters (placeholder — requires tags in GQL query)
+    // Diet tag filters — match against real Shopify product tags
     if (activeFilters.length > 0) {
-      result = result.filter(() => true);
+      result = result.filter((p) => {
+        const productTags = (p.node.tags ?? []).map((t) => t.toLowerCase());
+        return activeFilters.every((f) => productTags.includes(f.toLowerCase()));
+      });
     }
 
     return result;
