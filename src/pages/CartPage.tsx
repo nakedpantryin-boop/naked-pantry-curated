@@ -22,6 +22,7 @@ import { useEffect, useState, useMemo } from "react";
 import { storefrontApiRequest, PRODUCTS_QUERY, type ShopifyProduct } from "@/lib/shopify";
 import { CATEGORY_CONFIG } from "@/lib/categoryConfig";
 import ProductCard from "@/components/ProductCard";
+import RecentlyViewed from "@/components/RecentlyViewed";
 
 const TRUST_BADGES = [
   { icon: ShieldCheck, label: "Secure Checkout", sub: "SSL encrypted" },
@@ -408,6 +409,7 @@ const CartPage = () => {
         )}
       </main>
 
+      <RecentlyViewed />
       <Footer />
     </div>
   );

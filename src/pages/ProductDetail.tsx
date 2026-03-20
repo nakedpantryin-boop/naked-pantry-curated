@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useRecentlyViewedStore } from "@/stores/recentlyViewedStore";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -25,12 +27,16 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
 
+  const addRecentlyViewed = useRecentlyViewedStore((s) => s.addProduct);
+
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const data = await storefrontApiRequest(PRODUCT_BY_HANDLE_QUERY, { handle });
         if (data?.data?.product) {
           setProduct(data.data.product);
+          // Track as recently viewed
+          addRecentlyViewed({ node: data.data.product });
         }
       } catch (error) {
         console.error("Failed to fetch product:", error);
@@ -39,7 +45,12 @@ const ProductDetail = () => {
       }
     };
     if (handle) fetchProduct();
-  }, [handle]);
+  }, [handle, addRecentlyViewed]);
+
+  const currentProductId = useMemo(
+    () => (product ? new Set([product.id]) : new Set<string>()),
+    [product]
+  );
 
   if (loading) {
     return (
@@ -168,6 +179,7 @@ const ProductDetail = () => {
         </div>
       </main>
 
+      <RecentlyViewed excludeIds={currentProductId} />
       <Footer />
     </div>
   );
