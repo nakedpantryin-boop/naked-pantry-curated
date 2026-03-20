@@ -10,7 +10,7 @@ const Footer = () => {
           <div className="md:col-span-1">
             <h3 className="text-2xl font-bold mb-4">The Naked Pantry</h3>
             <p className="text-primary-foreground/80 mb-6 leading-relaxed">
-              The trusted marketplace for clean-label, curated pantry staples and healthy snacks for the conscious consumer.
+              Clean, curated, and mindful shopping for the conscious consumer.
             </p>
             <div className="flex space-x-3">
               <Button

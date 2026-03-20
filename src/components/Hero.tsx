@@ -20,8 +20,8 @@ const Hero = () => {
         </h1>
         
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-          A curated destination for conscious consumers to discover, learn about, and shop 
-          high-quality food products — with ingredient transparency, nutrition facts, and brand integrity at the core.
+          Discover premium products free from harmful additives. We curate only the finest, 
+          cleanest brands for conscious consumers who value quality and health.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
