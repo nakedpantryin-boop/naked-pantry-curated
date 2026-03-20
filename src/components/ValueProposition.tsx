@@ -26,9 +26,8 @@ const ValueProposition = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-6">
             Why Choose The Naked Pantry?
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            We believe that what you put in your body matters. That's why we've created 
-            a marketplace that makes clean, conscious shopping accessible and enjoyable.
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+            Our mission is to make healthy living simple and accessible by offering clean groceries free from harmful ingredients. We are committed to educating and empowering our community to make better choices for themselves and their families.
           </p>
         </div>
 
