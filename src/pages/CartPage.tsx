@@ -409,6 +409,7 @@ const CartPage = () => {
         )}
       </main>
 
+      <RecentlyViewed />
       <Footer />
     </div>
   );
