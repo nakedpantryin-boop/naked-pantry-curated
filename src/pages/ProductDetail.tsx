@@ -179,6 +179,7 @@ const ProductDetail = () => {
         </div>
       </main>
 
+      <RecentlyViewed excludeIds={currentProductId} />
       <Footer />
     </div>
   );
