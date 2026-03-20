@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useRecentlyViewedStore } from "@/stores/recentlyViewedStore";
+import RecentlyViewed from "@/components/RecentlyViewed";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
